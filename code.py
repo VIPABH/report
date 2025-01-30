@@ -150,7 +150,7 @@ async def send_email(event):
                 if i == 0:
                     await event.edit(f"تم الإرسال {i+1} بنجاح")
                 else:
-                    await event.respond(f"تم الإرسال {i+1} بنجاح")
+                    await event.edit(f"تم الإرسال {i+1} بنجاح")
                 await asyncio.sleep(1)
     except smtplib.SMTPException:
         pass
