@@ -35,6 +35,7 @@ async def start(event):
         ]
         await event.respond(
             "اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1",
+            file="https://t.me/VIPABH/1242",
             buttons=buttons
         )
 
@@ -47,36 +48,29 @@ async def restart(event):
 async def create_message(event):
     user_states[event.sender_id] = {'step': 'get_subject'}
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
-
 @client.on(events.NewMessage)
 async def handle_message(event):
     user_id = event.sender_id
     if user_id not in user_states:
         return
-
     state = user_states[user_id]
     step = state['step']
-
     if step == 'get_subject':
         state['subject'] = event.text
         state['step'] = 'get_body'
         await event.respond("أرسل نص الكليشة (الكليشة الكبيرة)")
-
     elif step == 'get_body':
         state['body'] = event.text
         state['step'] = 'get_recipient'
         await event.respond("أرسل الإيميل المستلم (`abuse@telegram.org`)")
-
     elif step == 'get_recipient':
         state['recipient'] = event.text
         state['step'] = 'get_email'
         await event.respond("أرسل بريدك الإلكتروني (الايميل الذي تريد منه الارسال)")
-
     elif step == 'get_email':
         state['sender_email'] = event.text
         state['step'] = 'get_password'
-        await event.respond("أرسل كلمة المرور (كلمة مرور التطبيق كما في الفديو)")
-
+        await event.respond("أرسل كلمة المرور (كلمة مرور التطبيق كما في الفديو)", file="https://t.me/recoursec/2")
     elif step == 'get_password':
         state['password'] = event.text
         subject = state.get('subject')
@@ -84,12 +78,10 @@ async def handle_message(event):
         recipient = state.get('recipient')
         sender_email = state.get('sender_email')
         password = state.get('password')
-
         if not all([subject, body, recipient, sender_email, password]):
             await event.respond("يرجى التأكد من إدخال جميع المعلومات. حاول مجددًا.")
-            user_states[user_id] = {}  # Reset state for user
+            user_states[user_id] = {}
             return
-        
         email_message = create_email_message(subject, body, recipient)
         buttons = [
             [Button.inline("إرسال الرسالة", b"send_email")]
@@ -99,50 +91,42 @@ async def handle_message(event):
             buttons=buttons
         )
         state['step'] = 'confirm_send'
-
 @client.on(events.CallbackQuery(data=lambda data: data.startswith(b"a")))
 async def handle_a_buttons(event):
     await send_email(event)
-
 @client.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
         await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
         return
-
     state = user_states[user_id]
     subject = state['subject']
     body = state['body']
     recipient = state['recipient']
     sender_email = state['sender_email']
     password = state['password']
-
 @client.on(events.CallbackQuery(data=lambda data: data.startswith(b"a")))
 async def handle_a_buttons(event):
     await send_email(event)
-
 @client.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
         await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
         return
-
     state = user_states[user_id]
     subject = state['subject']
     body = state['body']
     recipient = state['recipient']
     sender_email = state['sender_email']
     password = state['password']
-
     try:
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
         message["From"] = sender_email
         message["To"] = recipient
         message.attach(MIMEText(body, "plain"))
-
         with smtplib.SMTP_SSL(default_smtp_server, default_smtp_port) as server:
             server.login(sender_email, password)
             for i in range(100):
@@ -156,7 +140,6 @@ async def send_email(event):
         pass
     except Exception:
         pass
-
 # @client.on(events.NewMessage(pattern='/account'))
 # async def account(event):
 #     Buttons = [
@@ -165,6 +148,4 @@ async def send_email(event):
 #         [Button.inline("الحساب الثالث", b"a3")]
 #     ]
 #     await event.respond("اختر الحساب الذي تريد الدخول اليه", buttons=Buttons)
-
-        
 client.run_until_disconnected()
