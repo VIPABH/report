@@ -33,8 +33,9 @@ async def start(event):
             [Button.inline("إنشاء رسالة", b"create_message")]
         ]
         caption = "اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1"
-        
-        await event.respond(
+
+        # استخدام reply لضمان إرسال الملف + الأزرار معًا
+        await event.reply(
             caption,
             file="https://t.me/VIPABH/1242",
             buttons=buttons
