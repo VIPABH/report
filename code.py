@@ -33,13 +33,8 @@ async def start(event):
         buttons = [
             [Button.inline("إنشاء رسالة", b"create_message")]
         ]
-        await client.send_file(
-            event.chat_id,
-            "https://t.me/VIPABH/1242",
-            caption="اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1",
-            buttons=buttons
-        )
-
+        caption="اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1",
+        await event.client.send_file(event.chat_id, caption=caption, reply_to=event.message.id, buttons=buttons)
 @client.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
