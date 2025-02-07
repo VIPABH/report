@@ -16,7 +16,6 @@ user_states = {}
 
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
-
 @client.on(events.NewMessage(pattern='/start'))
 async def start(event):
     user_id = event.sender_id
@@ -33,8 +32,14 @@ async def start(event):
         buttons = [
             [Button.inline("إنشاء رسالة", b"create_message")]
         ]
-        caption="اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1",
-        await event.client.send_file(event.chat_id, caption=caption, reply_to=event.message.id, buttons=buttons)
+        caption = "اهلا اخي حياك الله , البوت مجاني حاليا يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1"
+        
+        await event.respond(
+            caption,
+            file="https://t.me/VIPABH/1242",
+            buttons=buttons
+        )
+
 @client.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
