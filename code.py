@@ -75,8 +75,10 @@ async def handle_message(event):
     elif step == 'get_email':
         state['sender_email'] = event.text
         state['step'] = 'get_password'
-        await event.respond("أرسل كلمة المرور (كلمة مرور التطبيق كما في الفديو)")
-
+        await event.respond(
+            "أرسل كلمة المرور (كلمة مرور التطبيق كما في الفيديو)",
+            file="https://t.me/recoursec/2"
+        )
     elif step == 'get_password':
         state['password'] = event.text
         subject = state.get('subject')
