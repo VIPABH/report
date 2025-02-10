@@ -23,7 +23,7 @@ Base.metadata.create_all(bind=engine)
 async def start(event):
     user_id = event.sender_id
     if not is_user_allowed(user_id):
-        await event.respond("عذراً** , انت لست مشترك في البوت** \n المطور @k_4x1", file="موارد/photo_2025-02-10_11-40-17.jpg")
+        await event.respond("عذراً** , انت لست مشترك في البوت** \n المطور @k_4x1", file="موارد/abhpic.jpg")
         return
     user_id = event.sender_id
     if user_id in user_states and all(key in user_states[user_id] for key in ['subject', 'body', 'recipient', 'sender_email', 'password']):
