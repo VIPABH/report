@@ -153,7 +153,7 @@ async def send_email(event):
 @client.on(events.NewMessage(pattern=r'اضف (\d+)'))
 async def add_me(event):
     sender_id = event.sender_id
-    if sender_id != 6806412130:
+    if sender_id != 1910015590:
         return
     user_id = int(event.pattern_match.group(1))
     add_user_to_db(user_id)
@@ -164,7 +164,7 @@ async def add_me(event):
 @client.on(events.NewMessage(pattern=r'حذف (\d+)'))
 async def delete_me(event):
     sender_id = event.sender_id    
-    if sender_id != 6806412130:
+    if sender_id != 1910015590:
         return
     user_id = int(event.pattern_match.group(1))
     if delete_user_from_db(user_id):
