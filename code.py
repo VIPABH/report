@@ -85,23 +85,34 @@ async def send_email(event):
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
         await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
         return
+
     state = user_states[user_id]
+    
     try:
         message = MIMEMultipart("alternative")
         message["Subject"] = state['subject']
         message["From"] = state['sender_email']
         message["To"] = state['recipient']
         message.attach(MIMEText(state['body'], "plain"))
+
+        status_message = await event.respond("جاري الإرسال...")
         with smtplib.SMTP_SSL(default_smtp_server, default_smtp_port) as server:
             server.login(state['sender_email'], state['password'])
+
             for i in range(100):
                 server.sendmail(state['sender_email'], state['recipient'], message.as_string())
-                await event.edit(f"تم الإرسال {i+1} بنجاح")
-                await asyncio.sleep(1)
-    except smtplib.SMTPException:
-        pass
-    except Exception:
-        pass
+                
+                if (i + 1) % 10 == 0:
+                    await status_message.edit(f"تم إرسال {i+1} رسائل بنجاح")
+                
+                await asyncio.sleep(5) 
+
+        await status_message.edit("📩 تم إرسال جميع الرسائل بنجاح!")
+    
+    except smtplib.SMTPException as e:
+        print(f"❌ خطأ في SMTP: {e}")
+    except Exception as e:
+        print(f"⚠️ حدث خطأ غير متوقع: {e}")
 
 @client.on(events.NewMessage(pattern=r'اضف (\d+)'))
 async def add_me(event):
