@@ -139,12 +139,11 @@ async def list_users(event):
 @client.on(events.NewMessage(pattern=r'وضع تأخير (\d+)'))
 async def set_sleep(event):
     sleep = int(event.pattern_match.group(1))
-    if sleep:
-        await event.reply(f'تم اعتماد مدة {sleep} ك مدة تأخيريه بين كل رساله☝')
+    if sleep < 1 or sleep > 10:
+        await event.reply('المدة يجب أن تكون بين 1 و 10 ⏳')
     else:
-        await event.reply('عذرا المفروض تذكر رقم معين بين ال 0 و ال 10 للتأخير بين كل رسالة 🤔')
-        if  0 < sleep > 10:
-            await event.reply('المدة من 1 الئ عشرة , لتخليها اكثر او اقل 🙄')
-
+        await event.reply(f'تم اعتماد مدة {sleep} كمدة تأخير بين كل رسالة ✅')
+        if not sleep:
+            await event.reply('ادخل رقم رجاءا')
 client.start(bot_token=bot_token)
 client.run_until_disconnected()
