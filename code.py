@@ -136,14 +136,5 @@ async def list_users(event):
         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
     else:
         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
-@client.on(events.NewMessage(pattern=r'وضع تأخير (\d+)'))
-async def set_sleep(event):
-    sleep = int(event.pattern_match.group(1))
-    if sleep < 1 or sleep > 10:
-        await event.reply('المدة يجب أن تكون بين 1 و 10 ⏳')
-    else:
-        await event.reply(f'تم اعتماد مدة {sleep} كمدة تأخير بين كل رسالة ✅')
-        if not sleep:
-            await event.reply('ادخل رقم رجاءا')
 client.start(bot_token=bot_token)
 client.run_until_disconnected()
