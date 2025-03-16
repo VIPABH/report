@@ -104,10 +104,9 @@ async def send_email(event):
                 await asyncio.sleep(2)
     
     except smtplib.SMTPException as e:
-        print(f"خطأ في SMTP: {e}")
+        await event.respond('تم وصول الحد اليومي')
     except Exception as e:
-        print(f"حدث خطأ: {e}")
-
+        await event.respond('الباسورد او الايميل خطأ')
 @client.on(events.NewMessage(pattern=r'اضف (\d+)'))
 async def add_me(event):
     if event.sender_id != 1910015590:
