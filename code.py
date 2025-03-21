@@ -16,16 +16,8 @@ def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
 ABH = TelegramClient('session_name', api_id, api_hash)
 Base.metadata.create_all(bind=engine)
-@ABH.on(events.NewMessage(pattern='/cancel'))
-async def cancle(event):
-    global iStart
-    iStart = False
-    return
-iStart = False
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
-    global iStart
-    iStart = False
     user_id = event.sender_id
     if not is_user_allowed(user_id):
         await event.respond("عذراً** , انت لست مشترك في البوت** \n المطور @k_4x1", file="موارد/abhpic.jpg")
@@ -37,16 +29,10 @@ async def start(event):
         await event.respond("اهلا اخي حياك الله , البوت مدفوع يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
-    global iStart
     user_states[event.sender_id] = {}
     await event.edit("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
-    iStart = False
 @ABH.on(events.CallbackQuery(data=b"create_message"))
-async def create_message(event):
-    global iStart
-    iStart = True
-    if not iStart:
-        return    
+async def create_message(event):    
     user_states[event.sender_id] = {'step': 'get_subject'}
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
 @ABH.on(events.NewMessage)
@@ -56,7 +42,7 @@ async def handle_message(event):
         return
     state = user_states[user_id]
     step = state.get('step')
-    if step is None and not iStart:
+    if step is None and :
         user_states[user_id]['step'] = 'get_subject'
         step = 'get_subject'
     if step == 'get_subject':
