@@ -16,6 +16,11 @@ def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
 ABH = TelegramClient('session_name', api_id, api_hash)
 Base.metadata.create_all(bind=engine)
+@ABH.on(events.NewMessage(pattern='/cancel'))
+async def cancle(event):
+    global iStart
+    iStart = False
+    return
 iStart = False
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
@@ -129,8 +134,5 @@ async def list_users(event):
         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
     else:
         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
-@ABH.on(events.NewMessage(pattern='/cancle'))
-async def cancle(event):
-    return
 ABH.start(bot_token=bot_token)
 ABH.run_until_disconnected()
