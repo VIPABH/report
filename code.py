@@ -40,7 +40,7 @@ async def restart(event):
     global iStart
     user_states[event.sender_id] = {}
     await event.edit("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
-    iStart = True
+    iStart = False
 @ABH.on(events.CallbackQuery(data=b"create_message"))
 async def create_message(event):
     global iStart
@@ -51,15 +51,12 @@ async def create_message(event):
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
 @ABH.on(events.NewMessage)
 async def handle_message(event):
-    global iStart
-    if iStart:
-        return
     user_id = event.sender_id
     if user_id not in user_states:
         return
     state = user_states[user_id]
     step = state.get('step')
-    if step is None:
+    if step is None and iStart:
         user_states[user_id]['step'] = 'get_subject'
         step = 'get_subject'
     if step == 'get_subject':
