@@ -21,8 +21,6 @@ iStart = False
 async def start(event):
     global iStart
     iStart = False
-    if not iStart:
-        return
     user_id = event.sender_id
     if not is_user_allowed(user_id):
         await event.respond("عذراً** , انت لست مشترك في البوت** \n المطور @k_4x1", file="موارد/abhpic.jpg")
@@ -42,6 +40,8 @@ async def restart(event):
 async def create_message(event):
     global iStart
     iStart = True
+    if not iStart:
+        return    
     user_states[event.sender_id] = {'step': 'get_subject'}
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
 @client.on(events.NewMessage)
