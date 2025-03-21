@@ -52,9 +52,8 @@ async def create_message(event):
 @ABH.on(events.NewMessage)
 async def handle_message(event):
     global iStart
-    if not iStart:
+    if iStart:
         return
-    # iStart = True
     user_id = event.sender_id
     if user_id not in user_states:
         return
