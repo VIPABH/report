@@ -42,7 +42,7 @@ async def handle_message(event):
         return
     state = user_states[user_id]
     step = state.get('step')
-    if step is None and :
+    if step is None:
         user_states[user_id]['step'] = 'get_subject'
         step = 'get_subject'
     if step == 'get_subject':
