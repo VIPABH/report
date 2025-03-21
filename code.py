@@ -51,7 +51,10 @@ async def create_message(event):
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
 @ABH.on(events.NewMessage)
 async def handle_message(event):
-    iStart = True
+    global iStart
+    if not iStart:
+        return
+    # iStart = True
     user_id = event.sender_id
     if user_id not in user_states:
         return
