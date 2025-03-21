@@ -14,10 +14,10 @@ bot_token = os.getenv('BOT_TOKEN')
 user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
-client = TelegramClient('session_name', api_id, api_hash)
+ABH = TelegramClient('session_name', api_id, api_hash)
 Base.metadata.create_all(bind=engine)
 iStart = False
-@client.on(events.NewMessage(pattern='/start'))
+@ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
     global iStart
     iStart = False
@@ -30,13 +30,13 @@ async def start(event):
         await event.respond("جميع المعلومات موجودة بالفعل. هل تريد الشد؟", buttons=buttons)
     else:
         await event.respond("اهلا اخي حياك الله , البوت مدفوع يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
-@client.on(events.CallbackQuery(data=b"restart"))
+@ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     global iStart
     user_states[event.sender_id] = {}
     await event.edit("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
     iStart = True
-@client.on(events.CallbackQuery(data=b"create_message"))
+@ABH.on(events.CallbackQuery(data=b"create_message"))
 async def create_message(event):
     global iStart
     iStart = True
@@ -44,7 +44,7 @@ async def create_message(event):
         return    
     user_states[event.sender_id] = {'step': 'get_subject'}
     await event.edit("أرسل الموضوع (الكليشة القصيرة)")
-@client.on(events.NewMessage)
+@ABH.on(events.NewMessage)
 async def handle_message(event):
     iStart = True
     user_id = event.sender_id
@@ -80,7 +80,7 @@ async def handle_message(event):
         email_message = create_email_message(state['subject'], state['body'], state['recipient'])
         await event.respond(f"تم إنشاء الكليشة التالية:\n\n{email_message}\n\nاضغط على الزر أدناه لإرسالها", buttons=[[Button.inline("إرسال الرسالة", b"send_email")]])
         state['step'] = 'confirm_send'
-@client.on(events.CallbackQuery(data=b"send_email"))
+@ABH.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
@@ -103,14 +103,14 @@ async def send_email(event):
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
     except Exception as e:
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
-@client.on(events.NewMessage(pattern=r'اضف (\d+)'))
+@ABH.on(events.NewMessage(pattern=r'اضف (\d+)'))
 async def add_me(event):
     if event.sender_id != 1910015590:
         return
     user_id = int(event.pattern_match.group(1))
     add_user_to_db(user_id)
     await event.respond(f"تمت إضافة المستخدم `{user_id}` إلى قائمة المسموح لهم في: {datetime.now().strftime('%Y-%m-%d %I:%M:%S %p')}.")
-@client.on(events.NewMessage(pattern=r'حذف (\d+)'))
+@ABH.on(events.NewMessage(pattern=r'حذف (\d+)'))
 async def delete_me(event):
     if event.sender_id != 1910015590:
         return
@@ -119,7 +119,7 @@ async def delete_me(event):
         await event.respond(f"تم حذف المستخدم `{user_id}` من قائمة المستخدمين المسموح لهم.")
     else:
         await event.respond("لا يوجد هكذا مستخدم")
-@client.on(events.NewMessage(pattern='/list'))
+@ABH.on(events.NewMessage(pattern='/list'))
 async def list_users(event):
     if event.sender_id != 1910015590:
         await event.respond("عذرا صديقي , الامر خاص بالمطور فقط")
@@ -129,5 +129,8 @@ async def list_users(event):
         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
     else:
         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
-client.start(bot_token=bot_token)
-client.run_until_disconnected()
+@ABH.on(events.NewMessage(pattern='/cancle'))
+async def cancle(event):
+    return
+ABH.start(bot_token=bot_token)
+ABH.run_until_disconnected()
