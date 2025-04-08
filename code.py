@@ -14,6 +14,9 @@ user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
 ABH = TelegramClient('session_name', api_id, api_hash)
+@ABH.on(events.NewMessage(pattern='/help'))
+async def help(event):
+    await event.reply('هلا والله \n /start ⇠ ل بدء تعيين الكلايش \n **الكليشة الصغيره** لتعيين الكليشة الصغيره والتي تكون  موضوع الرساله\n **الكليشة الكبيره** لتعيين الكليشة الاساسية والتي تكون هي الرساله الاساسية \n **المستلم** يمكنك تحديد اي مستلم لكن الابلاغ على مجموعات التلكرام يكون abouse \n **ايميل المرسل** ايميل حسابك لازم يكون حقيقي مفعل بي تحقق وامان الحساب \n **باسورد** لازم يكون نفس الموجود بالفيديو في خطوه تعيين الباسورد')
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
     user_id = event.sender_id
@@ -24,7 +27,7 @@ async def start(event):
         buttons = [[Button.inline("نعم، أريد الشد", b"send_email")], [Button.inline("لا، أريد البدء من جديد", b"restart")]]
         await event.respond("جميع المعلومات موجودة بالفعل. هل تريد الشد؟", buttons=buttons)
     else:
-        await event.respond("اهلا اخي اضغط 👇 لبدء انشاء الرسالة", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
+        await event.respond("اهلا اخي عندك طاقة تشد؟ استثمرها هنا", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
