@@ -1,11 +1,10 @@
-from telethon import TelegramClient, events, Button
-import os
 from database import add_user_to_db, is_user_allowed, delete_user_from_db, get_allowed_users # type: ignore
-from models import Base, engine # type: ignore 
-from datetime import datetime
-import asyncio, smtplib
+from telethon import TelegramClient, events, Button
 from email.mime.multipart import MIMEMultipart
+from models import Base, engine # type: ignore
 from email.mime.text import MIMEText
+from datetime import datetime
+import asyncio, smtplib, os
 default_smtp_server = "smtp.gmail.com"
 default_smtp_port = 465
 api_id = os.getenv('API_ID')
@@ -15,12 +14,11 @@ user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
 ABH = TelegramClient('session_name', api_id, api_hash)
-Base.metadata.create_all(bind=engine)
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
     user_id = event.sender_id
     if not is_user_allowed(user_id):
-        await event.respond("عذراً** , انت لست مشترك في البوت** \n المطور @k_4x1", file="موارد/abhpic.jpg")
+        await event.respond("عذراً** , البوت ليس مجاني , للاشتراك 👇** \n المطور @TT_OTbot", file="موارد/abhpic.jpg")
         return
     if user_id in user_states and all(key in user_states[user_id] for key in ['subject', 'body', 'recipient', 'sender_email', 'password']):
         buttons = [[Button.inline("نعم، أريد الشد", b"send_email")], [Button.inline("لا، أريد البدء من جديد", b"restart")]]
@@ -112,12 +110,10 @@ async def delete_me(event):
 @ABH.on(events.NewMessage(pattern='/list'))
 async def list_users(event):
     if event.sender_id != 1910015590:
-        await event.respond("عذرا صديقي , الامر خاص بالمطور فقط")
         return
     users = get_allowed_users()
     if users:
         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
     else:
         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
-ABH.start(bot_token=bot_token)
 ABH.run_until_disconnected()
