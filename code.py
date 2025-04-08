@@ -24,7 +24,7 @@ async def start(event):
         buttons = [[Button.inline("نعم، أريد الشد", b"send_email")], [Button.inline("لا، أريد البدء من جديد", b"restart")]]
         await event.respond("جميع المعلومات موجودة بالفعل. هل تريد الشد؟", buttons=buttons)
     else:
-        await event.respond("اهلا اخي حياك الله , البوت مدفوع يرفع بلاغات بصوره امنة وحقيقية \n المطور @K_4X1", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
+        await event.respond("اهلا اخي اضغط 👇 لبدء انشاء الرسالة", buttons=[[Button.inline("إنشاء رسالة", b"create_message")]])
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
