@@ -116,4 +116,5 @@ async def list_users(event):
         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
     else:
         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
+ABH.start(bot_token=bot_token)
 ABH.run_until_disconnected()
