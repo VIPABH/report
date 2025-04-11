@@ -89,7 +89,7 @@ async def send_email(event):
             for i in range(100):
                 server.sendmail(state['sender_email'], state['recipient'], message.as_string())
                 await event.edit(f"تم الإرسال {i+1} بنجاح")
-                await asyncio.sleep(2)
+                # await asyncio.sleep(2)
     except smtplib.SMTPException as e:
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
     except Exception as e:
