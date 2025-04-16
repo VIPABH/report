@@ -31,7 +31,7 @@ async def start(event):
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
-    await event.edit("تم إعادة تعيين الحالة. أرسل الموضوع (الكليشة القصيرة)
+    await event.edit("تم إعادة تعيين الحالة. أرسل الموضوع (الكليشة القصيرة))
 @ABH.on(events.CallbackQuery(data=b"create_message"))
 async def create_message(event):    
     user_states[event.sender_id] = {'step': 'get_subject'}
