@@ -49,6 +49,8 @@ async def start(event):
     if not is_user_allowed(user_id):
         await event.respond("عذراً** , البوت ليس مجاني , للاشتراك 👇** \n المطور @TT_OTbot", file="موارد/abhpic.jpg")
         return
+        if not is_user_subscribed(user_id):
+        return
     if user_id in user_states and all(key in user_states[user_id] for key in ['subject', 'body', 'recipient', 'sender_email', 'password']):
         buttons = [[Button.inline("نعم، أريد الشد", b"send_email")], [Button.inline("لا، أريد البدء من جديد", b"restart")]]
         await event.respond("جميع المعلومات موجودة بالفعل. هل تريد الشد؟", buttons=buttons)
