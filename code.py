@@ -32,7 +32,7 @@ async def handler(event):
     user_id = event.sender_id
     if not is_user_subscribed(user_id):
         await event.respond(
-            f"لطفاً يجب ان تكون مشترك بالقناة👇",
+            f"👇لطفاً يجب ان تكون مشترك بالقناة",
             buttons=[Button.url("القناة", الرابط)]
         )
         return
