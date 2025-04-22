@@ -11,31 +11,6 @@ api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 ABH = TelegramClient('code', api_id, api_hash).start(bot_token=bot_token)
-CHANNELS = ["x04ou", "EHIEX", "sszxl"]
-def check(user_id, channel_username):
-    url = f"https://api.telegram.org/bot{bot_token}/getChatMember?chat_id=@{channel_username}&user_id={user_id}"
-    try:
-        response = requests.get(url).json()
-        if response.get("ok"):
-            status = response["result"]["status"]
-            return status in ["member", "administrator", "creator"]
-        else:
-            return False
-    except requests.exceptions.RequestException as e:
-        return False
-@ABH.on(events.NewMessage(incoming=True))
-async def handler(event):
-    if not event.is_private:
-        return
-    user_id = event.sender_id
-    for channel_username in CHANNELS:
-        if not check(user_id, channel_username):
-            channel_link = f"https://t.me/{channel_username}"
-            await event.respond(
-                f"ل استخدام البوت يجب ان تكون مشترك 👇\n{channel_link}",
-                buttons=[Button.url("القناة", channel_link)]
-            )
-            return
 user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
