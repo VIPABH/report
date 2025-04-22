@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 from models import Base, engine # type: ignore
 from email.mime.text import MIMEText
 from datetime import datetime
-import asyncio, smtplib, os
+import asyncio, smtplib, os, requests
 default_smtp_server = "smtp.gmail.com"
 default_smtp_port = 465
 api_id = os.getenv('API_ID')
