@@ -35,7 +35,9 @@ async def handler(event):
             f"👇لطفاً يجب ان تكون مشترك بالقناة",
             buttons=[Button.url("القناة", الرابط)]
         )
+        await event.delete()
         return
+    await event.respond("✅ مرحباً بك، أنت مشترك ويمكنك استخدام البوت.")
 user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
