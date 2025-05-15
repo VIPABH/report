@@ -1,4 +1,4 @@
-from database import add_user_to_db, is_user_allowed, delete_user_from_db, get_allowed_users # type: ignore
+# from database import add_user_to_db, is_user_allowed, delete_user_from_db, get_allowed_users # type: ignore
 from telethon import TelegramClient, events, Button
 from email.mime.multipart import MIMEMultipart
 from models import Base, engine # type: ignore
@@ -20,9 +20,9 @@ async def help(event):
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
     user_id = event.sender_id
-    if not is_user_allowed(user_id):
-        await event.respond("عذراً** , البوت ليس مجاني , للاشتراك 👇** \n المطور @TT_OTbot", file="موارد/abhpic.jpg")
-        return
+    # if not is_user_allowed(user_id):
+    #     await event.respond("عذراً** , البوت ليس مجاني , للاشتراك 👇** \n المطور @TT_OTbot", file="موارد/abhpic.jpg")
+    #     return
     if user_id in user_states and all(key in user_states[user_id] for key in ['subject', 'body', 'recipient', 'sender_email', 'password']):
         buttons = [[Button.inline("نعم، أريد الشد", b"send_email")], [Button.inline("لا، أريد البدء من جديد", b"restart")]]
         await event.respond("جميع المعلومات موجودة بالفعل. هل تريد الشد؟", buttons=buttons)
@@ -94,30 +94,30 @@ async def send_email(event):
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
     except Exception as e:
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
-@ABH.on(events.NewMessage(pattern=r'اضف (\d+)'))
-async def add_me(event):
-    if event.sender_id != 1910015590:
-        return
-    user_id = int(event.pattern_match.group(1))
-    add_user_to_db(user_id)
-    await event.respond(f"تمت إضافة المستخدم `{user_id}` إلى قائمة المسموح لهم في: {datetime.now().strftime('%Y-%m-%d %I:%M:%S %p')}.")
-@ABH.on(events.NewMessage(pattern=r'حذف (\d+)'))
-async def delete_me(event):
-    if event.sender_id != 1910015590:
-        return
-    user_id = int(event.pattern_match.group(1))
-    if delete_user_from_db(user_id):
-        await event.respond(f"تم حذف المستخدم `{user_id}` من قائمة المستخدمين المسموح لهم.")
-    else:
-        await event.respond("لا يوجد هكذا مستخدم")
-@ABH.on(events.NewMessage(pattern='/list'))
-async def list_users(event):
-    if event.sender_id != 1910015590:
-        return
-    users = get_allowed_users()
-    if users:
-        await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
-    else:
-        await event.respond("لا يوجد اشخاص متاح لهم البوت...")
-ABH.start(bot_token=bot_token)
+# @ABH.on(events.NewMessage(pattern=r'اضف (\d+)'))
+# async def add_me(event):
+#     if event.sender_id != 1910015590:
+#         return
+#     user_id = int(event.pattern_match.group(1))
+#     add_user_to_db(user_id)
+#     await event.respond(f"تمت إضافة المستخدم `{user_id}` إلى قائمة المسموح لهم في: {datetime.now().strftime('%Y-%m-%d %I:%M:%S %p')}.")
+# @ABH.on(events.NewMessage(pattern=r'حذف (\d+)'))
+# async def delete_me(event):
+#     if event.sender_id != 1910015590:
+#         return
+#     user_id = int(event.pattern_match.group(1))
+#     if delete_user_from_db(user_id):
+#         await event.respond(f"تم حذف المستخدم `{user_id}` من قائمة المستخدمين المسموح لهم.")
+#     else:
+#         await event.respond("لا يوجد هكذا مستخدم")
+# @ABH.on(events.NewMessage(pattern='/list'))
+# async def list_users(event):
+#     if event.sender_id != 1910015590:
+#         return
+#     users = get_allowed_users()
+#     if users:
+#         await event.respond("قائمة المستخدمين المسموح لهم:\n" + "\n".join([f"(`{user.user_id}`) - {user.added_at.strftime('%Y-%m-%d %I:%M:%S %p')}" for user in users]))
+#     else:
+#         await event.respond("لا يوجد اشخاص متاح لهم البوت...")
+# ABH.start(bot_token=bot_token)
 ABH.run_until_disconnected()
