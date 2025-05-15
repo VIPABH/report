@@ -3,12 +3,12 @@ from email.mime.text import MIMEText
 from telethon import TelegramClient, events, Button
 import smtplib, asyncio, os
 
-# إعداد SMTP
+# إعداد SMTP مع STARTTLS
 default_smtp_server = "smtp.gmail.com"
-default_smtp_port = 465
+default_smtp_port = 587  # تعديل المنفذ إلى 587
 
 # إعداد API الخاصة بالبوت
-api_id = int(os.getenv("API_ID", 123456))       # استبدله أو استخدم environment variables
+api_id = int(os.getenv("API_ID", 123456))       # استبدل أو استخدم environment variables
 api_hash = os.getenv("API_HASH", "your_api_hash")
 bot_token = os.getenv("BOT_TOKEN", "your_bot_token")
 
@@ -42,7 +42,9 @@ async def send_email_loop(event):
     await event.respond("🔄 جاري الإرسال، سيتم إرسال الرسالة 100 مرة...")
 
     try:
-        with smtplib.SMTP_SSL(default_smtp_server, default_smtp_port) as server:
+        with smtplib.SMTP(default_smtp_server, default_smtp_port) as server:
+            server.ehlo()
+            server.starttls()  # تفعيل STARTTLS
             server.login(sender_email, password)
             for i in range(100):
                 server.sendmail(sender_email, recipient, message.as_string())
