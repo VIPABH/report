@@ -21,8 +21,8 @@ def get_email_content():
 
 Идентификатор группы : 1784332159'''
     recipient = 'abuse@telegram.org'
-    sender_email = 'a8919832@gmail.com'
-    password = 'kofd jgki muzi zwet'
+    sender_email = 'abh780988@gmail.com'
+    password = 'xxpv aato gwnv mhlc'
     return subject, body, recipient, sender_email, password
 
 # دالة إنشاء الرسالة
