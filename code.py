@@ -129,9 +129,8 @@ async def send_email(event):
                 server.sendmail(state['sender_email'], state['recipient'], message.as_string())
                 await event.respond(f"تم الإرسال {i+1} بنجاح")
                 await asyncio.sleep(2)
-
-    except Exception:
-        await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
+    except Exception as e:
+        await event.respond(f"فشل الإرسال:\n{str(e)}")
 
 # تشغيل البوت
 ABH.start(bot_token=bot_token)
