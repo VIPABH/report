@@ -71,7 +71,7 @@ async def handle_message(event):
         email_message = create_email_message(state['subject'], state['body'], state['recipient'])
         await event.respond(f"تم إنشاء الكليشة التالية:\n\n{email_message}\n\nاضغط على الزر أدناه لإرسالها", buttons=[[Button.inline("إرسال الرسالة", b"send_email")]])
         state['step'] = 'confirm_send'
-@ABH.on(events.NewMessage(pattern='/star'))
+@ABH.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
