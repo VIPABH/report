@@ -4,13 +4,12 @@ from email.mime.multipart import MIMEMultipart
 from models import Base, engine # type: ignore
 from email.mime.text import MIMEText
 from datetime import datetime
-import asyncio, smtplib, os, requests
+import asyncio, smtplib, os
 default_smtp_server = "smtp.gmail.com"
 default_smtp_port = 465
 api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
-ABH = TelegramClient('code', api_id, api_hash).start(bot_token=bot_token)
 user_states = {}
 def create_email_message(subject, body, recipient):
     return f"Subject: {subject}\nTo: {recipient}\n\n{body}"
@@ -21,8 +20,6 @@ async def help(event):
 @ABH.on(events.NewMessage(pattern='/start'))
 async def start(event):
     user_id = event.sender_id
-    # if not is_user_subscribed(user_id):
-    #         return
     if not is_user_allowed(user_id):
         await event.respond("عذراً** , البوت ليس مجاني , للاشتراك 👇** \n المطور @TT_OTbot", file="موارد/abhpic.jpg")
         return
@@ -34,7 +31,7 @@ async def start(event):
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
-    await event.edit("تم إعادة تعيين الحالة. أرسل الموضوع (الكليشة القصيرة)")
+    await event.edit("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
 @ABH.on(events.CallbackQuery(data=b"create_message"))
 async def create_message(event):    
     user_states[event.sender_id] = {'step': 'get_subject'}
@@ -77,10 +74,10 @@ async def handle_message(event):
 @ABH.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
-    # if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
-    #     await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
-    #     return
-    # state = user_states[user_id]
+    if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
+        await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
+        return
+    state = user_states[user_id]
     try:
         message = MIMEMultipart("alternative")
         message["Subject"] = state['subject']
@@ -92,7 +89,7 @@ async def send_email(event):
             for i in range(100):
                 server.sendmail(state['sender_email'], state['recipient'], message.as_string())
                 await event.edit(f"تم الإرسال {i+1} بنجاح")
-                # await asyncio.sleep(2)
+                await asyncio.sleep(2)
     except smtplib.SMTPException as e:
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
     except Exception as e:
