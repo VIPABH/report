@@ -31,11 +31,11 @@ async def start(event):
 @ABH.on(events.CallbackQuery(data=b"restart"))
 async def restart(event):
     user_states[event.sender_id] = {}
-    await event.edit("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
+    await event.respond("تم إعادة تعيين الحالة. يمكنك البدء من جديد باستخدام /start.")
 @ABH.on(events.CallbackQuery(data=b"create_message"))
 async def create_message(event):    
     user_states[event.sender_id] = {'step': 'get_subject'}
-    await event.edit("أرسل الموضوع (الكليشة القصيرة)")
+    await event.respond("أرسل الموضوع (الكليشة القصيرة)")
 @ABH.on(events.NewMessage)
 async def handle_message(event):
     user_id = event.sender_id
@@ -75,7 +75,7 @@ async def handle_message(event):
 async def send_email(event):
     user_id = event.sender_id
     if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
-        await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
+        await event.respond("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
         return
     state = user_states[user_id]
     try:
@@ -88,7 +88,7 @@ async def send_email(event):
             server.login(state['sender_email'], state['password'])
             for i in range(100):
                 server.sendmail(state['sender_email'], state['recipient'], message.as_string())
-                await event.edit(f"تم الإرسال {i+1} بنجاح")
+                await event.respond(f"تم الإرسال {i+1} بنجاح")
                 await asyncio.sleep(2)
     except smtplib.SMTPException as e:
         await event.respond("اما وصلت الى الحد اليومي او هنالك خطأ في الايميل او الباسورد")
