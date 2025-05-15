@@ -77,10 +77,10 @@ async def handle_message(event):
 @ABH.on(events.CallbackQuery(data=b"send_email"))
 async def send_email(event):
     user_id = event.sender_id
-    if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
-        await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
-        return
-    state = user_states[user_id]
+    # if user_id not in user_states or user_states[user_id].get('step') != 'confirm_send':
+    #     await event.edit("أحدا أو كل المعلومات فيها نقص. \n حاول مره أخرى مع /start")
+    #     return
+    # state = user_states[user_id]
     try:
         message = MIMEMultipart("alternative")
         message["Subject"] = state['subject']
